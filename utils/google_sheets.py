@@ -1,11 +1,26 @@
 import gspread
 import pandas as pd
 from google.oauth2.service_account import Credentials
+import streamlit as st
+import json
 
 # Authenticate with Google Sheets
 def connect_to_sheets():
-    creds = Credentials.from_service_account_file("service_account.json", scopes=["https://www.googleapis.com/auth/spreadsheets"])
+
+    service_account_info = json.loads(st.secrets["gcp"]["service_account_json"])
+    creds = Credentials.from_service_account_info(service_account_info, scopes=["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"])
+
+    # Authenticate with gspread
     client = gspread.authorize(creds)
+    
+    # sheet = client.open_by_key(sheet_id)
+    # worksheet = sheet.worksheet("Master")  # Change accordingly
+    # data = worksheet.get(range_name)
+
+    # return data
+    
+    # creds = Credentials.from_service_account_file("service_account.json", scopes=["https://www.googleapis.com/auth/spreadsheets"])
+    # client = gspread.authorize(creds)
     return client
 
 # Fetch data using Sheet ID and Range
